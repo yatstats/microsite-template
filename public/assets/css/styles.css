@@ -1,1 +1,42 @@
+/* Global YAT?STATS Microsite Styles */
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background-color: #ffffff;
+}
+
+.site-header {
+  background-color: #000;
+  padding: 16px 24px;
+}
+
+.site-header .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header .logo img {
+  height: 48px;
+}
+
+.site-nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.site-nav a.nav-active {
+  border-bottom: 2px solid #ffcc00;
+}
+
+.site-footer {
+  padding: 20px;
+  text-align: center;
+  background-color: #000;
+  color: white;
+  margin-top: 40px;
+}
 
