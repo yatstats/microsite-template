@@ -3,19 +3,846 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YAT?STATS Microsite Template</title>
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <title>{{SCHOOL_NAME}} YAT?STATS</title>
+
+  <!-- Basic reset + layout styles; no external dependencies -->
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0b1020;
+      --card: #111827;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.45);
+      --max-width: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, var(--bg) 45%, #020617 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem 2.5rem;
+    }
+
+    /* HEADER / NAVBAR */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: linear-gradient(to bottom, rgba(5, 8, 22, 0.95), rgba(5, 8, 22, 0.75), transparent);
+      backdrop-filter: blur(10px);
+    }
+
+    .site-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 0.75rem 1.25rem 0.9rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fed7aa, #f97316 40%, #7c2d12 80%);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7), 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #111827;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-text-main {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 700;
+    }
+
+    .brand-text-sub {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 1.1rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      padding-bottom: 0.2rem;
+      border-bottom: 1px solid transparent;
+      transition: color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+      opacity: 0.9;
+    }
+
+    .nav-links a:hover {
+      color: #f97316;
+      border-color: rgba(249, 115, 22, 0.5);
+      opacity: 1;
+    }
+
+    .nav-pill {
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.16), rgba(15, 23, 42, 0.9));
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+    }
+
+    .nav-pill span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      font-size: 0.6rem;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    /* HERO */
+    .hero {
+      margin-top: 1.1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr);
+      gap: 1.25rem;
+    }
+
+    @media (min-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        align-items: stretch;
+      }
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .hero-primary {
+      background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), rgba(15, 23, 42, 0.9));
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      box-shadow: var(--shadow-soft);
+      padding: 1.6rem 1.6rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 250, 252, 0.16);
+      color: #e5e7eb;
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(30, 64, 175, 0.85));
+    }
+
+    .small-stat {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .small-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    .hero-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .hero-kicker {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 3vw + 1rem, 2.7rem);
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      margin-top: 0.2rem;
+      font-size: 0.95rem;
+      color: #d1d5db;
+      max-width: 30rem;
+    }
+
+    .hero-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.75rem;
+      color: #e5e7eb;
+    }
+
+    .meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      border-radius: 999px;
+      padding: 0.6rem 1.15rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #f97316, #ea580c);
+      color: #111827;
+      box-shadow: 0 12px 28px rgba(248, 113, 22, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(248, 113, 22, 0.55);
+      opacity: 0.96;
+    }
+
+    .btn-ghost {
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.8);
+      color: #e5e7eb;
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-1px);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .hero-footnote {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .hero-secondary {
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.95));
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      box-shadow: var(--shadow-soft);
+      padding: 1.4rem 1.4rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .panel-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .panel-pill {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(96, 165, 250, 0.6);
+      color: #dbeafe;
+      background: rgba(15, 23, 42, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.96));
+      border-radius: 14px;
+      padding: 0.75rem 0.8rem;
+      border: 1px solid rgba(30, 64, 175, 0.6);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .stat-sub {
+      margin-top: 0.1rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .featured-players {
+      margin-top: 0.4rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed rgba(51, 65, 85, 0.8);
+    }
+
+    .featured-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .player-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .player-pill {
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.75rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .player-pos {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    /* SECTIONS BELOW HERO */
+    .section-row {
+      margin-top: 1.7rem;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr);
+      gap: 1.1rem;
+    }
+
+    @media (min-width: 880px) {
+      .section-row {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      }
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem 1.25rem 1rem;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #e5e7eb;
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .quick-link {
+      border-radius: 12px;
+      padding: 0.7rem 0.75rem;
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 1));
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+      font-size: 0.78rem;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      border-color: rgba(249, 115, 22, 0.6);
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 1));
+    }
+
+    .quick-link-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .quick-link-main {
+      font-weight: 600;
+    }
+
+    .quick-link-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .updates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .update-item {
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      font-size: 0.78rem;
+    }
+
+    .update-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .update-main {
+      color: #e5e7eb;
+    }
+
+    .update-meta {
+      margin-top: 0.2rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 1.5rem;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .footer-links a {
+      opacity: 0.8;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      color: #f97316;
+    }
+  </style>
 </head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand-wrap">
+          <div class="brand-mark">
+            <!-- Optional mascot initials -->
+            {{MASCOT_ABBR}}
+          </div>
+          <div class="brand-text">
+            <div class="brand-text-main">
+              {{SCHOOL_NAME}}
+            </div>
+            <div class="brand-text-sub">
+              YAT?STATS · {{CITY_STATE}}
+            </div>
+          </div>
+        </div>
 
-<body data-page="home">
-  <div id="site-header"></div>
+        <nav class="nav-links">
+          <!-- You can rename these once we lock your exact 8-page structure -->
+          <a href="index.html">Home</a>
+          <a href="roster.html">Roster</a>
+          <a href="alumni.html">Alumni</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="history.html">History</a>
+        </nav>
 
-  <main>
-    <h1>Microsite Template Active</h1>
-    <p>Your global header, footer, and shared layout are working.</p>
-  </main>
+        <div class="nav-pill">
+          LIVE PROGRAM TRACKER
+          <span>{{CURRENT_SEASON_YEAR}}</span>
+        </div>
+      </div>
+    </header>
 
-  <div id="site-footer"></div>
-  <script src="/assets/js/layout.js"></script>
+    <!-- MAIN CONTENT -->
+    <main class="shell">
+      <!-- HERO -->
+      <section class="hero">
+        <!-- LEFT: program overview -->
+        <div class="hero-primary">
+          <div class="hero-tag-row">
+            <div class="tag">
+              {{STATE_NAME}} · {{DIVISION_LABEL}} · {{CONFERENCE_NAME}}
+            </div>
+            <div class="small-stat">
+              <span class="small-dot"></span>
+              PROGRAM ID: {{HSID}}
+            </div>
+          </div>
+
+          <div class="hero-heading">
+            <div class="hero-kicker">
+              {{SPORT_NAME}} PROGRAM DASHBOARD
+            </div>
+            <h1 class="hero-title">
+              {{SCHOOL_NAME}} <span>{{MASCOT_NAME}}</span>
+            </h1>
+            <p class="hero-subtitle">
+              Live snapshot of {{SCHOOL_SHORT}} alumni and current players across high school, college, and pro baseball.
+              Every appearance, every level, one unified source of truth.
+            </p>
+          </div>
+
+          <div class="hero-meta-row">
+            <div class="meta-pill">
+              <div class="meta-label">Microsite</div>
+              <div>{{CANONICAL_SUBDOMAIN}}</div>
+            </div>
+            <div class="meta-pill">
+              <div class="meta-label">Sandbox</div>
+              <div>{{SANDBOX_SUBDOMAIN}}</div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <!-- These hrefs should map to your real pages/routes once defined -->
+            <a href="alumni.html" class="btn btn-primary">
+              View Alumni Tracker →
+            </a>
+            <a href="roster.html" class="btn btn-ghost">
+              Current Roster & Stats
+            </a>
+          </div>
+
+          <p class="hero-footnote">
+            Data surfaced from your YAT?STATS engine using <strong>HSID {{HSID}}</strong> as the primary key. 
+            This page is a template: all values in <strong>{{CURLY_BRACES}}</strong> should be injected dynamically per school.
+          </p>
+        </div>
+
+        <!-- RIGHT: quick stats + featured players -->
+        <aside class="hero-secondary">
+          <div class="panel-header">
+            <div class="panel-title">Program Snapshot ({{CURRENT_SEASON_YEAR}})</div>
+            <div class="panel-pill">Auto-Generated</div>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-label">Alumni Playing</div>
+              <div class="stat-value">{{ALUMNI_ACTIVE_COUNT}}</div>
+              <div class="stat-sub">Across all levels</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">College Programs</div>
+              <div class="stat-value">{{COLLEGE_PROGRAM_COUNT}}</div>
+              <div class="stat-sub">With at least one alum</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pro Contracts</div>
+              <div class="stat-value">{{PRO_CONTRACT_COUNT}}</div>
+              <div class="stat-sub">Drafted or signed</div>
+            </div>
+          </div>
+
+          <div class="featured-players">
+            <div class="featured-label">Featured Alumni · {{FEATURED_SEASON_TAG}}</div>
+            <div class="player-row">
+              <!-- Repeatable item: example structure -->
+              <div class="player-pill">
+                <span>{{FEATURED_PLAYER_1_NAME}}</span>
+                <span class="player-pos">{{FEATURED_PLAYER_1_LEVEL}}</span>
+              </div>
+              <div class="player-pill">
+                <span>{{FEATURED_PLAYER_2_NAME}}</span>
+                <span class="player-pos">{{FEATURED_PLAYER_2_LEVEL}}</span>
+              </div>
+              <div class="player-pill">
+                <span>{{FEATURED_PLAYER_3_NAME}}</span>
+                <span class="player-pos">{{FEATURED_PLAYER_3_LEVEL}}</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- BELOW HERO: quick navigation + recent updates -->
+      <section class="section-row">
+        <!-- LEFT: Quick navigation tiles -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Program Pages</h2>
+          </div>
+          <p class="card-desc">
+            One template, eight pages. Use these tiles to connect this home dashboard to your deeper views
+            (roster, alumni, game log, program history, etc.). Links below are placeholders until we finalize
+            your exact site map.
+          </p>
+
+          <div class="quick-links">
+            <!-- Each of these will eventually map to one of the 8 core pages -->
+            <a href="roster.html" class="quick-link">
+              <div class="quick-link-label">Page · 01</div>
+              <div class="quick-link-main">Current Roster & Box Scores</div>
+              <div class="quick-link-meta">
+                Dynamic by season, jersey number, and position.
+              </div>
+            </a>
+            <a href="alumni.html" class="quick-link">
+              <div class="quick-link-label">Page · 02</div>
+              <div class="quick-link-main">Alumni Tracker</div>
+              <div class="quick-link-meta">
+                All-time alumni with live college & pro stats.
+              </div>
+            </a>
+            <a href="schedule.html" class="quick-link">
+              <div class="quick-link-label">Page · 03</div>
+              <div class="quick-link-main">Schedule & Results</div>
+              <div class="quick-link-meta">
+                Regular season, playoffs, and tournament play.
+              </div>
+            </a>
+            <a href="history.html" class="quick-link">
+              <div class="quick-link-label">Page · 04</div>
+              <div class="quick-link-main">Program History</div>
+              <div class="quick-link-meta">
+                Championships, records, and award winners.
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT: Recent updates / change log -->
+        <aside class="card">
+          <div class="card-header">
+            <h2 class="card-title">Recent Activity</h2>
+          </div>
+          <p class="card-desc">
+            High-level feed for this HSID: roster changes, new alumni appearances, and major milestones
+            surfaced automatically from your data pipeline.
+          </p>
+
+          <div class="updates-list">
+            <div class="update-item">
+              <div class="update-label">Update · {{UPDATE_1_DATE}}</div>
+              <div class="update-main">
+                {{UPDATE_1_SUMMARY}}
+              </div>
+              <div class="update-meta">
+                Source: {{UPDATE_1_SOURCE}} · Level: {{UPDATE_1_LEVEL}}
+              </div>
+            </div>
+
+            <div class="update-item">
+              <div class="update-label">Update · {{UPDATE_2_DATE}}</div>
+              <div class="update-main">
+                {{UPDATE_2_SUMMARY}}
+              </div>
+              <div class="update-meta">
+                Source: {{UPDATE_2_SOURCE}} · Level: {{UPDATE_2_LEVEL}}
+              </div>
+            </div>
+
+            <div class="update-item">
+              <div class="update-label">Update · {{UPDATE_3_DATE}}</div>
+              <div class="update-main">
+                {{UPDATE_3_SUMMARY}}
+              </div>
+              <div class="update-meta">
+                Source: {{UPDATE_3_SOURCE}} · Level: {{UPDATE_3_LEVEL}}
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="site-footer">
+        <div>
+          © {{CURRENT_YEAR}} YAT?STATS · {{SCHOOL_NAME}} {{MASCOT_NAME}} Microsite 
+          · HSID {{HSID}}
+        </div>
+        <div class="footer-links">
+          <!-- Placeholder footer links; wire up per your platform needs -->
+          <a href="#">Program Admin Login</a>
+          <a href="#">Report Data Issue</a>
+          <a href="#">About YAT?STATS</a>
+        </div>
+      </footer>
+    </main>
+  </div>
 </body>
 </html>
