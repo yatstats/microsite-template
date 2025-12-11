@@ -297,6 +297,18 @@ async function loadCSV(url){
     position:r[idx('position')], front_img:r[idx('front_img')], hs_img:r[idx('hs_img')]
   }));
 }
+/*
+  Fallback roster: if the live CSV cannot load (network/offline envs),
+  we seed the page with a few mock players so the homepage still renders
+  the flip-card grid instead of failing quietly.
+*/
+const FALLBACK_PLAYERS=[
+  {id:'mock-01',slug:'xavier-johnson',display_name:'Xavier Johnson',grad_class:'2024',letter_years:'2021,2022,2023',status:'ACTIVE 2024',level:'NCAA-D1',team:'Bayou State Jaguars',city_state:'New Orleans, LA',front_img:'assets/img/placeholder.jpg',hs_img:'assets/img/placeholder.jpg'},
+  {id:'mock-02',slug:'dante-boudreaux',display_name:'Dante Boudreaux',grad_class:'2023',letter_years:'2020,2021,2022',status:'FREE AGENT',level:'INDY',team:'River City Crawfish',city_state:'Baton Rouge, LA',front_img:'assets/img/placeholder.jpg',hs_img:'assets/img/placeholder.jpg'},
+  {id:'mock-03',slug:'marcus-landry',display_name:'Marcus Landry',grad_class:'2022',letter_years:'2019,2020,2021',status:'RETIRED',level:'NCAA-D2',team:'Lakefront Falcons',city_state:'Lafayette, LA',front_img:'assets/img/placeholder.jpg',hs_img:'assets/img/placeholder.jpg'},
+  {id:'mock-04',slug:'eli-trafton',display_name:'Eli Trafton',grad_class:'2025',letter_years:'2022,2023,2024',status:'ACTIVE 2025',level:'JUCO',team:'Gulf Coast Marlins',city_state:'Biloxi, MS',front_img:'assets/img/placeholder.jpg',hs_img:'assets/img/placeholder.jpg'}
+];
+
 
 function defaultSort(a,b){
   const orderStatus=['ACTIVE 2025','FREE AGENT','INJURED','ACTIVE 2024','RETIRED','SPONSOR'];
@@ -432,7 +444,13 @@ document.addEventListener('input',(e)=>{ if(e.target && e.target.id==='playerSea
   try{
     window.PLAYERS = await loadCSV(CSV_URL);
     window.PLAYERS.sort(defaultSort);
-    window.dispatchEvent(new CustomEvent('players-ready'));
-  }catch(e){ console.error('CSV load failed', e); }
+  }catch(e){
+    console.error('CSV load failed, using fallback roster', e);
+    window.PLAYERS = FALLBACK_PLAYERS.slice();
+  }finally{
+    if(window.PLAYERS?.length){
+      window.dispatchEvent(new CustomEvent('players-ready'));
+    }
+  }
 })();
 </script>
