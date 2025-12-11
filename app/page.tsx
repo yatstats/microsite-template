@@ -1,14 +1,33 @@
 import PlayerGrid from '@/components/PlayerGrid';
 import SiteShell from '@/components/SiteShell';
-import { getPlayersForHsid } from '@/lib/players';
 import { Player } from '@/lib/types';
 
+function getHsid(): string | null {
+  return process.env.YAT_BASE_HSID || '5004';
+}
+
+function resolveBaseUrl() {
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  return 'http://localhost:3000';
+}
+
 async function fetchPlayers(hsid: string): Promise<Player[]> {
-  return getPlayersForHsid(hsid);
+  const baseUrl = resolveBaseUrl();
+  const response = await fetch(`${baseUrl}/api/players?hsid=${encodeURIComponent(hsid)}`, {
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch players');
+  }
+
+  const data = await response.json();
+  return data.players || [];
 }
 
 export default async function HomePage() {
-  const hsid = process.env.YAT_BASE_HSID;
+  const hsid = getHsid();
 
   if (!hsid) {
     console.error('YAT_BASE_HSID is not configured');
